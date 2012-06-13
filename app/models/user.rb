@@ -7,6 +7,8 @@
 #  email      :string(255)
 #  created_at :datetime        not null
 #  updated_at :datetime        not null
+#  password_digest: varchar
+#  remember_token: varchar
 #
 
 class User < ActiveRecord::Base
@@ -26,7 +28,6 @@ class User < ActiveRecord::Base
   validates :password_confirmation, presence: true
 
 private
-
   def create_remember_token
     self.remember_token = SecureRandom.urlsafe_base64
   end
