@@ -33,6 +33,14 @@ describe User do
   it {should respond_to(:admin)}
   it {should respond_to(:authenticate)}
 
+  describe "accessible atributes" do
+    it "should not access to admin atttribute" do
+      expect do
+        User.new(admin: true)
+      end.should raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+  end
+
   describe "with attribute admin set to true" do
     before {@user.toggle!(:admin)}
     it {should be_admin}
@@ -44,7 +52,7 @@ describe User do
     it{should_not be_valid}
   end
 
-  describe "when email is not present"do
+  describe "when email is not present" do
     before {@user.email=""}
     it{should_not be_valid}
   end
