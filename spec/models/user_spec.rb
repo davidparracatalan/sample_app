@@ -151,6 +151,14 @@ describe User do
         Micropost.find_by_id(micropost.id).should be_nil
       end
     end
+
+    describe "user's feed contains only user's microposts" do
+      let(:unfollowed_post) {FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))}
+
+      its(:feed) {should include(newer_micropost)}
+      its(:feed) {should include(older_micropost)}
+      its(:feed) {should_not include(unfollowed_post)}
+    end
   
   end
 end
