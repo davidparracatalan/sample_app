@@ -22,9 +22,12 @@ subject{page}
 
         before do
           FactoryGirl.create(:micropost, user: user, content: "Loren ipsum")
-          FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
           sign_in user
           visit root_path          
+        end
+
+        it "should show sidebar's microposts counter for one single micropost" do
+          page.should have_content("1 micropost")
         end
 
         it "should welcome the signed-in user" do
@@ -35,6 +38,23 @@ subject{page}
           user.feed.each do |item|
             page.should have_selector("li##{item.id}", text: item.content)
           end          
+        end
+
+        describe "for signed-in users with more than one micropost" do
+          let(:active_user) {FactoryGirl.create(:user)}
+          before do
+            31.times{FactoryGirl.create(:micropost, user: active_user, content: "Loren ipsum")}
+            sign_in active_user
+            visit root_path
+          end
+
+          it "should show properly sidebar's microposts counter for more than one micropost(pluralize)" do
+            page.should have_content("#{active_user.microposts.count} microposts")
+          end
+
+          it "should paginate when user has more than 30 micropost" do
+            page.should have_selector ('div.pagination')
+          end
         end
       end
   end
