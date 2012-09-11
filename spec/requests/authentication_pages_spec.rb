@@ -90,25 +90,36 @@ describe "Authentication" do
           end
         end
       end
-    end
-    
 
-    describe "in the users controller" do
-      let(:user) {FactoryGirl.create(:user)}
+      describe "in the users controller" do
+        let(:user) {FactoryGirl.create(:user)}
 
-      describe "visiting the edit page" do
-        before {visit edit_user_path(user)}
-        it {should have_selector('title', text: 'Sign in')}
+        describe "visiting the edit page" do
+          before {visit edit_user_path(user)}
+          it {should have_selector('title', text: 'Sign in')}
+        end
+
+        describe "submitting the update action" do
+          before {put user_path(user)}
+          specify {response.should redirect_to(signin_path)}
+        end
+
+        describe "visiting the user index" do
+          before {visit users_path}
+          it{should have_selector('title', text: "Sign in")}
+        end
       end
 
-      describe "submitting the update action" do
-        before {put user_path(user)}
-        specify {response.should redirect_to(signin_path)}
-      end
+      describe "in the Relationships controller" do
+        describe "submitting a relationship create" do
+          before {post relationships_path}
+          specify {response.should redirect_to (signin_path)}
+        end
 
-      describe "visiting the user index" do
-        before {visit users_path}
-        it{should have_selector('title', text: "Sign in")}
+        describe "submitting a relationship destroy" do
+          before {delete relationship_path(1)}
+          specify {response.should redirect_to (signin_path)}
+        end
       end
     end
 
